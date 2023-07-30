@@ -36,8 +36,8 @@ class FlutterBackgroundService implements Observable {
   Future<bool> isRunning() => _platform.isServiceRunning();
 
   @override
-  void invoke(String method, [Map<String, dynamic>? arg]) =>
-      _platform.invoke(method, arg);
+  Future<void> invoke(String method, [Map<String, dynamic>? arg]) async =>
+      await _platform.invoke(method, arg);
 
   @override
   Stream<Map<String, dynamic>?> on(String method) => _platform.on(method);

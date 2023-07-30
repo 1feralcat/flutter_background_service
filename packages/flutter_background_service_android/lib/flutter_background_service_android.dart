@@ -109,11 +109,17 @@ class FlutterBackgroundServiceAndroid extends FlutterBackgroundServicePlatform {
   }
 
   @override
-  void invoke(String method, [Map<String, dynamic>? args]) {
-    _channel.invokeMethod("sendData", {
-      'method': method,
-      'args': args,
-    });
+  Future<void> invoke(String method, [Map<String, dynamic>? args]) async {
+    try {
+      await _channel.invokeMethod("sendData", {
+        'action': method,
+        'content': args,
+      });
+    } catch (e, st) {
+      print('FlutterBackgroundServiceAndroid: $method $args');
+      print('$e');
+      print('$st');
+    }
   }
 
   @override
@@ -121,8 +127,8 @@ class FlutterBackgroundServiceAndroid extends FlutterBackgroundServicePlatform {
     return _controller.stream.transform(
       StreamTransformer.fromHandlers(
         handleData: (data, sink) {
-          if (data['method'] == method) {
-            sink.add(data['args']);
+          if ("*" == method || data['action'] == method) {
+            sink.add(data);
           }
         },
       ),
@@ -151,11 +157,17 @@ class AndroidServiceInstance extends ServiceInstance {
   }
 
   @override
-  void invoke(String method, [Map<String, dynamic>? args]) {
-    _channel.invokeMethod('sendData', {
-      'method': method,
-      'args': args,
-    });
+  Future<void> invoke(String method, [Map<String, dynamic>? args]) async {
+    try {
+      await _channel.invokeMethod("sendData", {
+        'action': method,
+        'content': args,
+      });
+    } catch (e, st) {
+      print('AndroidServiceInstance: $method $args');
+      print('$e');
+      print('$st');
+    }
   }
 
   @override
@@ -168,8 +180,9 @@ class AndroidServiceInstance extends ServiceInstance {
     return _controller.stream.transform(
       StreamTransformer.fromHandlers(
         handleData: (data, sink) {
-          if (data['method'] == method) {
-            sink.add(data['args']);
+          // print('AndroidServiceInstance method: $method data:$data');
+          if (method == '*' || data['action'] == method) {
+            sink.add(data);
           }
         },
       ),

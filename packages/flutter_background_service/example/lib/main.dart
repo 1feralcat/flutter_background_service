@@ -148,9 +148,6 @@ void onStart(ServiceInstance service) async {
       }
     }
 
-    /// you can see this log in logcat
-    print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');
-
     // test using external plugin
     final deviceInfo = DeviceInfoPlugin();
     String? device;
@@ -201,13 +198,14 @@ class _MyAppState extends State<MyApp> {
                   );
                 }
 
-                final data = snapshot.data!;
+                final data = snapshot.data!['content'];
                 String? device = data["device"];
-                DateTime? date = DateTime.tryParse(data["current_date"]);
+                DateTime? date = data == null || data["current_date"] == null ? null : DateTime.tryParse
+                (data["current_date"]);
                 return Column(
                   children: [
                     Text(device ?? 'Unknown'),
-                    Text(date.toString()),
+                    Text('date: ${date}'),
                   ],
                 );
               },

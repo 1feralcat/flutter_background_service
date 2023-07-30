@@ -100,10 +100,10 @@ class FlutterBackgroundServiceIOS extends FlutterBackgroundServicePlatform {
   }
 
   @override
-  void invoke(String method, [Map<String, dynamic>? args]) {
-    _channel.invokeMethod("sendData", {
-      'method': method,
-      'args': args,
+  Future<void> invoke(String method, [Map<String, dynamic>? args]) async {
+    await _channel.invokeMethod("sendData", {
+      'action': method,
+      'content': args,
     });
   }
 
@@ -112,8 +112,8 @@ class FlutterBackgroundServiceIOS extends FlutterBackgroundServicePlatform {
     return _streamController.stream.transform(
       StreamTransformer.fromHandlers(
         handleData: (data, sink) {
-          if (data['method'] == method) {
-            sink.add(data['args']);
+          if ("*" == method || data['action'] == method) {
+            sink.add(data);
           }
         },
       ),
@@ -144,8 +144,8 @@ class IOSServiceInstance extends ServiceInstance {
   @override
   void invoke(String method, [Map<String, dynamic>? args]) {
     _channel.invokeMethod('sendData', {
-      'method': method,
-      'args': args,
+      'action': method,
+      'content': args,
     });
   }
 
@@ -159,8 +159,8 @@ class IOSServiceInstance extends ServiceInstance {
     return _controller.stream.transform(
       StreamTransformer.fromHandlers(
         handleData: (data, sink) {
-          if (data['method'] == method) {
-            sink.add(data['args']);
+          if (method == '*' || data['action'] == method) {
+            sink.add(data);
           }
         },
       ),

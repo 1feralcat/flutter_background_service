@@ -6,7 +6,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 export 'src/configs.dart';
 
 abstract class Observable {
-  void invoke(String method, [Map<String, dynamic>? args]);
+  Future<void> invoke(String method, [Map<String, dynamic>? args]);
   Stream<Map<String, dynamic>?> on(String method);
 }
 

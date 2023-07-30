@@ -124,15 +124,8 @@ public class FlutterBackgroundServicePlugin implements FlutterPlugin, MethodCall
             }
 
             if (method.equalsIgnoreCase("sendData")) {
-                synchronized (servicePipe){
-                    if (servicePipe.hasListener()){
-                        servicePipe.invoke((JSONObject) call.arguments);
-                        result.success(true);
-                        return;
-                    }
-
-                    result.success(false);
-                }
+                servicePipe.invoke((JSONObject) call.arguments);
+                result.success(true);
                 return;
             }
 

@@ -15,25 +15,18 @@ public class Pipe {
         return !listeners.isEmpty();
     }
 
-    public void addListener(PipeListener listener){
-        synchronized (this){
-            this.listeners.add(listener);
-        }
+    public synchronized void addListener(PipeListener listener){
+        this.listeners.add(listener);
     }
 
-    public void removeListener(PipeListener listener){
-        synchronized (this){
-            this.listeners.remove(listener);
-        }
+    public synchronized void removeListener(PipeListener listener){
+        this.listeners.remove(listener);
     }
 
-    public void invoke(JSONObject object){
-        synchronized (this) {
-            if (!listeners.isEmpty()) {
-                for (PipeListener listener :
-                        this.listeners) {
-                    listener.onReceived(object);
-                }
+    public synchronized void invoke(JSONObject object){
+        if (!listeners.isEmpty()) {
+            for (PipeListener listener : listeners) {
+                listener.onReceived(object);
             }
         }
     }
